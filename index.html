@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ad Viewer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #1a1c21;
+      color: #f0f0f0;
+    }
+    .container {
+      max-width: 700px;
+      margin: auto;
+      padding: 40px 20px;
+    }
+    h1 {
+      margin-bottom: 16px;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      display: grid;
+      gap: 10px;
+    }
+    li {
+      background: #2b2f3a;
+      padding: 12px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 1px solid #3c4258;
+    }
+    li:hover {
+      background: #3a4054;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal.active {
+      display: flex;
+    }
+    .modal-box {
+      background: #222;
+      padding: 16px;
+      border-radius: 8px;
+      max-width: 720px;
+      width: 90%;
+      position: relative;
+    }
+    .modal video {
+      width: 100%;
+      border-radius: 4px;
+    }
+    .close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      font-size: 24px;
+      background: none;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>My Ads</h1>
+    <ul id="video-list"></ul>
+  </div>
+
+  <div id="modal" class="modal">
+    <div class="modal-box">
+      <button class="close" id="close-btn">&times;</button>
+      <h2 id="modal-title"></h2>
+      <video id="modal-video" controls preload="metadata"></video>
+    </div>
+  </div>
+
+  <script>
+    const videoList = [
+      { title: "chemical.mp4", src: "https://juzisepic.github.io/juzisepic-ads/chemical.mp4" },
+       { title: "phantom.mp4", src: "https://juzisepic.github.io/juzisepic-ads/phantom.mp4" },
+    ];
+
+    const list = document.getElementById('video-list');
+    const modal = document.getElementById('modal');
+    const title = document.getElementById('modal-title');
+    const video = document.getElementById('modal-video');
+    const closeBtn = document.getElementById('close-btn');
+
+    videoList.forEach(v => {
+      const item = document.createElement('li');
+      item.textContent = v.title;
+      item.addEventListener('click', () => {
+        title.textContent = v.title;
+        video.src = v.src;
+        modal.classList.add('active');
+        video.play().catch(()=>{});
+      });
+      list.appendChild(item);
+    });
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', e => {
+      if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    function closeModal() {
+      modal.classList.remove('active');
+      video.pause();
+      video.src = '';
+    }
+  </script>
+</body>
+</html>
